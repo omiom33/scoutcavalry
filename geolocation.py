@@ -7,7 +7,7 @@ from bcolors import bcolors
 
 ip = None
 def getGeoLoc(ip):
-    if ip == None:
+    if ip is None:
         ip = urlopen('http://icanhazip.com')
         ip = ip.read().decode("utf-8")
 
@@ -30,6 +30,6 @@ def getGeoLoc(ip):
     city_name = "Disabled"
     latitude = str(data["geo"]["latitude"])
     longitude = str(data["geo"]["longitude"])
-    
+
     return (continent, country_name, city_name, latitude, longitude)
     

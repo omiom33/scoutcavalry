@@ -55,7 +55,7 @@ def xmlImport(filename, db_name):
     conn = create_connection(database)
     hosts = root.findall('host')
     host_count = len(hosts)
-    
+
     print(f"{bcolors.OKBLUE}Importing {host_count}{bcolors.ENDC}")
     for host in hosts:
     # Get hosts and add to host_data 
@@ -65,7 +65,7 @@ def xmlImport(filename, db_name):
         hostname = None
         img_file = None
 
-             
+
         try:
             service_id = socket.getservbyport(int(port_id))
         except:
@@ -73,35 +73,29 @@ def xmlImport(filename, db_name):
 
         if service_id is None:
            service_id = "Unknown"
-
        # get hostname, set to None if unavailable
         try:
             print(f"{bcolors.OKBLUE}[+] Resolving hostname for {ip_addr}...{bcolors.ENDC}")
             hostname = socket.gethostbyaddr(ip_addr)
         except:
             print(f"{bcolors.FAIL}[!] Could not resolve hostname{bcolors.ENDC}")
-            pass
-        
-        if hostname is None:
-            hostname = None
-        else: hostname = hostname[0]
-        
+        hostname = None if hostname is None else hostname[0]
         # get screenshot of http or https service
-        if service_id == 'http' or service_id == 'https':
+        if service_id in ['http', 'https']:
             if hostname is None:
                 hostname = "N/A"
                 url = f"{service_id}://{ip_addr}:{port_id}"
             else:
                 url = f"{service_id}://{hostname}"
-            
+
             try:
                img_file = webscreen.getWebScreen(url)
                dest = f'{image_dir}/{img_file}'
                shutil.move(img_file, dest)
-            
+
             except:
                pass
-        
+
         elif img_file is None:       
             img_file = "unavailable"
             print(f"{bcolors.WARNING}[*] Unable to capture screenshot{bcolors.ENDC}")
@@ -120,8 +114,6 @@ def xmlImport(filename, db_name):
             except Exception as e:
                 print(f"{bcolors.FAIL}[!] Skipping duplicate entry...{bcolors.ENDC}\n\n")
                 print(e)
-                pass
-        
     print(f"{bcolors.OKBLUE}[*] Finished {bcolors.ENDC}")
 
 
