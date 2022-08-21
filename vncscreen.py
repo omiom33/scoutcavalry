@@ -22,10 +22,10 @@ def getVncScreen(ip_addr, port):
         if "RFB" not in rfb_version_string:
             print("Unable to capture screenshot")
             return
-        
+
         vnc_socket.send(RFB_VERSION)
         auth_required = vnc_socket.recv(1)
-        
+
         if not auth_required:
             print("Unable to capture screenshot")
             return
@@ -40,14 +40,12 @@ def getVncScreen(ip_addr, port):
             # close authentication check socket and then run command. command must be run after or vncsnapshot will end prematurely
             vnc_socket.shutdown(socket.SHUT_WR)
             vnc_socket.close()
-            
+
             os.system(vnc_snapshot)
             return filename
-        
+
 
     except socket.error:
         vnc_socket.close()
-        pass
     except socket.timeout:
         vnc_socket.close()
-        pass

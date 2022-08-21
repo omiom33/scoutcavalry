@@ -83,16 +83,12 @@ def run_scan():
         ports = request.form.get('ports').replace(" ", "")
         packet_rate = request.form.get('packet_rate')
 
-    if filename.endswith(".xml"):
-        filename = filename
-    else:
-        filename = filename+".xml"
+    filename = filename if filename.endswith(".xml") else f"{filename}.xml"
+    print(f"Starting scanner for IP/range: {ip_addr}")
+    print(f"Scanning ports: {ports}")
+    print(f"Saving as: {filename}")
+    print(f"Packet Rate: {packet_rate}")
 
-    print("Starting scanner for IP/range: "+ip_addr)
-    print("Scanning ports: "+ports)
-    print("Saving as: "+filename)
-    print("Packet Rate: "+packet_rate)
-    
     scanner.run(filename, ip_addr, ports, packet_rate)
     return render_template("scan.html", active_page=active_page)
 
@@ -117,12 +113,9 @@ def upload_file():
 def config_db():
     active_page= 'manage_db'
 
-    root_dir = os.getcwd() 
-    # Get a list of available .db files in order to populate <select> element
-    database_files = []
+    root_dir = os.getcwd()
     os.chdir(DB_DIR)
-    for db in glob.glob("*.db"):
-        database_files.append(db)
+    database_files = list(glob.glob("*.db"))
     os.chdir(root_dir)
 
     return render_template("manage_db.html",database_files = database_files, active_page=active_page)
@@ -137,16 +130,16 @@ def create_db():
     if request.method == 'POST':
         filename = request.form.get('filename', type=str)
         if not filename.endswith(".db"):
-            filename = filename+".db"
-    
+            filename = f"{filename}.db"
+
         print("Creating database with filename:",filename)
         manage_db.create_db(app.config['DB_DIR'], filename)
-        
+
     return  "Done."
 
-@app.route("/save_db/<path:filename>") 
+@app.route("/save_db/<path:filename>")
 def save_db(filename):
-    print("Downloading Database: " + filename)
+    print(f"Downloading Database: {filename}")
     return send_from_directory(app.config['DB_DIR'], filename, mimetype='application/x-sqlite3')
 
 @app.route("/import_db", methods=['GET', 'POST'])

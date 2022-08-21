@@ -31,14 +31,12 @@ def getWebScreen(url):
             ip_stripped = net_loc.replace('.','-')
             filename = f"{ip_stripped}_{port_num}_scrot.png"
             print(f"{bcolors.WARNING}[!] Using IP instead of hostname{bcolors.ENDC}")
-    
+
     except:
         print(f"{bcolors.WARNING}[!] Using hostname instead of IP{bcolors.ENDC}")
-        pass
-
     if filename is None:
         filename = url_parsed.netloc.replace('.', '_')+'_scrot.png' # change to timestamp in future 
-   
+
     print(url)
     driver = webdriver.Chrome(options=chrome_options)
     driver.set_window_size(800,600)

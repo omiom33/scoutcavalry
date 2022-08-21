@@ -26,9 +26,7 @@ def load_database(path, filename):
 
     c.execute("SELECT * FROM hosts")
 
-    rows = c.fetchall()
-
-    return rows
+    return c.fetchall()
 
 # will create a database but not open it within the host view
 def create_db(path, filename):
